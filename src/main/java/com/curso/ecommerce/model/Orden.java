@@ -2,7 +2,21 @@ package com.curso.ecommerce.model;
 
 import java.util.Date;
 
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="Ordenes")
+
 public class Orden {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	private String numero;
 	
@@ -10,6 +24,15 @@ public class Orden {
 	private Date fechaRecibida;
 	
 	private double total;
+	
+	@ManyToOne
+	private Usuarios usuario;
+	
+	
+	@OneToOne(mappedBy="orden")
+	private DetalleOrden detalle;
+	
+	
 	public Orden() {
 		// TODO Auto-generated constructor stub
 	}
@@ -21,6 +44,8 @@ public class Orden {
 		this.fechaRecibida = fechaRecibida;
 		this.total = total;
 	}
+	
+	
 	public Integer getId() {
 		return id;
 	}
@@ -50,6 +75,24 @@ public class Orden {
 	}
 	public void setTotal(double total) {
 		this.total = total;
+	}
+	
+	
+	
+	
+	public Usuarios getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(Usuarios usuario) {
+		this.usuario = usuario;
+	}
+	
+	
+	public DetalleOrden getDetalle() {
+		return detalle;
+	}
+	public void setDetalle(DetalleOrden detalle) {
+		this.detalle = detalle;
 	}
 	@Override
 	public String toString() {
