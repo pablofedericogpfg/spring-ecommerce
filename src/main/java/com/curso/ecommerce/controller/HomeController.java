@@ -1,6 +1,7 @@
 package com.curso.ecommerce.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +31,12 @@ public class HomeController {
 	}
 	
 	@GetMapping("productohome/{id}")
-	public String productoHome(@PathVariable Integer id) {
+	public String productoHome(@PathVariable Integer id,Model model) {
 		LOGGER.info("Id producto enviado como parametro {}",id);
+		Producto producto= new Producto();
+		Optional<Producto> productoOptional= productoService.get(id);
+		producto=productoOptional.get();
+		model.addAttribute("producto", producto);
 		return "usuario/productohome";
 	}
 
