@@ -18,6 +18,7 @@ public class DetalleOrden {
 	private double cantidad;
 	private double precio;
 	private double total;
+	private String imagen;
 	
 	
 	@OneToOne
@@ -38,6 +39,7 @@ public class DetalleOrden {
 		this.cantidad = cantidad;
 		this.precio = precio;
 		this.total = total;
+		
 	}
 
 	public Integer getId() {
@@ -86,6 +88,14 @@ public class DetalleOrden {
 		return orden;
 	}
 
+	public String getImagen() {
+		return imagen;
+	}
+
+	public void setImagen(String image) {
+		this.imagen = image;
+	}
+
 	public void setOrden(Orden orden) {
 		this.orden = orden;
 	}
@@ -97,7 +107,8 @@ public class DetalleOrden {
 	public void setProducto(Producto producto) {
 		this.producto = producto;
 	}
-
+	
+	
 	@Override
 	public String toString() {
 		return "DetalleOrden [id=" + id + ", nombre=" + nombre + ", cantidad=" + cantidad + ", precio=" + precio

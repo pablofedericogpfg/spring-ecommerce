@@ -3,6 +3,7 @@ package com.curso.ecommerce.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.DoubleStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,16 +52,34 @@ public class HomeController {
 		return "usuario/productohome";
 	}
 	@PostMapping("/cart")
-	public String addCart(@RequestParam Integer id,@RequestParam Integer cantidad) {
+	public String addCart(@RequestParam Integer id,@RequestParam Integer cantidad,Model model) {
 		
 		DetalleOrden detalleOrden=new DetalleOrden();
 		Producto producto=new Producto();
-		double sumaTotal=0;
+		Double sumaTotal=0.00;
 		
 		Optional<Producto> optionalProducto=productoService.get(id);
 		
 		LOGGER.info("Producto añadido:{}",optionalProducto.get());
 		LOGGER.info("cantidad:{}",cantidad);
+		
+		producto=optionalProducto.get();
+		detalleOrden.setCantidad(cantidad);
+		detalleOrden.setPrecio(producto.getPrecio());
+		detalleOrden.setNombre(producto.getNombre());
+		detalleOrden.setTotal(producto.getPrecio()*cantidad);
+		detalleOrden.setProducto(producto);
+		detalleOrden.setImagen(producto.getImagen());
+		
+		detalles.add(detalleOrden);
+		
+		detalleOrden.setId(id);
+		sumaTotal=detalles.stream().mapToDouble(dt->dt.getTotal()).sum();
+		
+		orden.setTotal(sumaTotal);
+		model.addAttribute("cart",detalles); // inyectar en cart los detalles
+		model.addAttribute("orden", orden);
+		
 		return "usuario/carrito";
 	}
 
