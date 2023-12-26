@@ -3,7 +3,7 @@ package com.curso.ecommerce.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.DoubleStream;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.curso.ecommerce.model.DetalleOrden;
 import com.curso.ecommerce.model.Producto;
+import com.curso.ecommerce.model.Usuarios;
 import com.curso.ecommerce.model.Orden;
+import com.curso.ecommerce.service.IUsuarioService;
 import com.curso.ecommerce.service.ProductoService;
 
 @Controller
@@ -28,6 +30,9 @@ public class HomeController {
 	private final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 	@Autowired
 	private ProductoService productoService;
+	
+	@Autowired
+	private IUsuarioService usuarioService;
 
 	// para almacenar los detalles de la orden
 	List<DetalleOrden> detalles = new ArrayList<DetalleOrden>();
@@ -134,8 +139,11 @@ public class HomeController {
 	
 	@GetMapping("/order")
 	public String order(Model model) {
+		Usuarios usuario=usuarioService.findById(1).get();
 		model.addAttribute("cart", detalles); // inyectar en cart los detalles
 		model.addAttribute("orden", orden);
+		model.addAttribute("usuario",usuario);
+		
 
 		return "/usuario/resumenorden";
 	}
