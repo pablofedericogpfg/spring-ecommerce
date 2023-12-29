@@ -11,7 +11,7 @@ import com.curso.ecommerce.repository.IProductoRepository;
 
 
 @Service
-public class ProductoServiceImpl implements ProductoService{
+public class ProductoServiceImpl implements IProductoService{
 	
 	@Autowired
 	private IProductoRepository productoRepository;
