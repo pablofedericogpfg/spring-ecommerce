@@ -26,5 +26,12 @@ public class UsuarioServiceImpl implements IUsuarioService{
 		return usuarioRepository.saveAndFlush(usuario);
 	}
 
+	@Override
+	public Optional<Usuarios> findByMail(String mail) {
+		// TODO Auto-generated method stub
+		
+		return usuarioRepository.findByMail(mail);
+	}
+
 
 }
