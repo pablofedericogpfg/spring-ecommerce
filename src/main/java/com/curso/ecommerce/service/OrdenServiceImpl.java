@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.curso.ecommerce.model.Orden;
+import com.curso.ecommerce.model.Usuarios;
 import com.curso.ecommerce.repository.IOrdenRepository;
 
 @Service
@@ -50,6 +51,11 @@ public class OrdenServiceImpl implements IOrdenService{
 		*/
 		numeroConcatenado=String.format("%0" + 10 + "d", Integer.valueOf(numero));
 		return numeroConcatenado;
+	}
+	@Override
+	public List<Orden> findByUsuario(Usuarios usuario) {
+		// TODO Auto-generated method stub
+		return oredenRepository.findByUsuario(usuario);
 	}
 
 }

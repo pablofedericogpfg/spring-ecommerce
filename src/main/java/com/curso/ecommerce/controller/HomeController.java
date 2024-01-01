@@ -188,8 +188,8 @@ public class HomeController {
 			return "redirect:/";
 		}
 		Date fechaCreacion= new Date();
-		
-		orden.setFechaRecibida(fechaCreacion);
+		orden.setFechaCreacion(fechaCreacion);
+		//orden.setFechaRecibida(fechaCreacion);
 		orden.setNumero(ordenService.generarNumeroOrden());
 		
 		//Usuario

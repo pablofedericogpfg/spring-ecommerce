@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.curso.ecommerce.model.Usuarios;
+import com.curso.ecommerce.service.IOrdenService;
 import com.curso.ecommerce.service.IUsuarioService;
 
 import jakarta.servlet.http.HttpSession;
@@ -25,6 +26,10 @@ public class UsuarioController {
 	@Autowired
 	private IUsuarioService usuarioService;
 	
+
+	@Autowired
+	private IOrdenService ordenService;
+
 	//usuario/registro
 	@GetMapping("/registro")
 	public String create() {
@@ -68,7 +73,12 @@ public class UsuarioController {
 	@GetMapping("/compras")
 	public String obtenerCompras(Model model,HttpSession session) {
 		
+		Usuarios usuario=usuarioService.findById(Integer.parseInt( session.getAttribute("idusuario").toString())).get();
+		model.addAttribute("ordenes",ordenService.findByUsuario(usuario));
+		
+		
 		model.addAttribute("sesion",session.getAttribute("idusuario"));
+		
 		return "/usuario/compras";
 	}
 }
