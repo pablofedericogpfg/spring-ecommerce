@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.curso.ecommerce.model.Orden;
 import com.curso.ecommerce.model.Usuarios;
 import com.curso.ecommerce.service.IOrdenService;
 import com.curso.ecommerce.service.IUsuarioService;
@@ -81,4 +83,18 @@ public class UsuarioController {
 		
 		return "/usuario/compras";
 	}
+	
+	@GetMapping("/detalle/{id}")
+	public String detallecompra(@PathVariable Integer id, HttpSession session,Model model) {
+		//session
+		LOGGER.info("Id de la Orden: {}",id);
+		model.addAttribute("sesion",session.getAttribute("idusuario"));
+		
+		Orden orden = ordenService.findById(id).get();
+		model.addAttribute("detalles",orden.getDetalle());
+		
+		return "usuario/detallecompra";
+	}
+	
+	
 }
