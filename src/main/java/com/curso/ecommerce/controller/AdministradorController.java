@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.curso.ecommerce.model.Producto;
 import com.curso.ecommerce.model.Usuarios;
+import com.curso.ecommerce.service.IOrdenService;
 import com.curso.ecommerce.service.IProductoService;
 import com.curso.ecommerce.service.IUsuarioService;
 
@@ -28,6 +29,10 @@ public class AdministradorController {
 	private IUsuarioService usuarioService;	
 
 	List<Usuarios> usuarios = new ArrayList<Usuarios>();
+
+	@Autowired
+	private IOrdenService ordenService;
+	
 	
 	@GetMapping("")
 	public String home(Model model, HttpSession session) {
@@ -46,5 +51,17 @@ public class AdministradorController {
 			return "administrador/usuarios";
 		}
 		return "redirect:/";
+	}
+	
+	@GetMapping("/ordenes")
+	public String ordenes(HttpSession session,Model model) {
+		Usuarios usuario = usuarioService.findById(Integer.parseInt(session.getAttribute("idusuario").toString()))
+				.get();
+		if (usuario.getTipo().equals("ADMIN")) {
+			model.addAttribute("ordenes", ordenService.findAll());
+			return "administrador/ordenes";
+		}
+		return "redirect:/";		
+		
 	}
 }
