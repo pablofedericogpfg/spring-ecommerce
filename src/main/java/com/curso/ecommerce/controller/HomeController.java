@@ -36,13 +36,13 @@ public class HomeController {
 	private final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 	@Autowired
 	private IProductoService productoService;
-	
+
 	@Autowired
 	private IUsuarioService usuarioService;
-	
+
 	@Autowired
 	private IOrdenService ordenService;
-	
+
 	@Autowired
 	private IDetalleOrdenService detalleOrdenService;
 
@@ -52,14 +52,16 @@ public class HomeController {
 	// datos de la orden
 	Orden orden = new Orden();
 
+
+
 	@GetMapping("")
 	public String home(Model model, HttpSession session) {
 		// List<Producto> productos=productoService.findAll();
-		LOGGER.info("Session de Usuario {}",session.getAttribute("idusuario"));
+		LOGGER.info("Session de Usuario {}", session.getAttribute("idusuario"));
 		model.addAttribute("productos", productoService.findAll());
-		//Session
-		model.addAttribute("sesion",session.getAttribute("idusuario"));
-		
+		// Session
+		model.addAttribute("sesion", session.getAttribute("idusuario"));
+
 		return "usuario/home";
 	}
 
@@ -149,75 +151,78 @@ public class HomeController {
 	public String getCart(Model model, HttpSession session) {
 		model.addAttribute("cart", detalles); // inyectar en cart los detalles
 		model.addAttribute("orden", orden);
-		
-		//session
-		model.addAttribute("sesion",session.getAttribute("idusuario"));
-		
+
+		// session
+		model.addAttribute("sesion", session.getAttribute("idusuario"));
 
 		return "/usuario/carrito";
 	}
-	
+
 	@GetMapping("/order")
-	public String order(Model model,HttpSession session) {
-		//session.getAttribute("idusuario")
-		if ( session.getAttribute("idusuario")==null) {
-			
+	public String order(Model model, HttpSession session) {
+		// session.getAttribute("idusuario")
+		if (session.getAttribute("idusuario") == null) {
+
 			return "/usuario/login";
-		}		
+		}
 		if (detalles.isEmpty()) {
 			return "redirect:/";
-		}		
-		Usuarios usuario=usuarioService.findById(Integer.parseInt( session.getAttribute("idusuario").toString())).get();
+		}
+		Usuarios usuario = usuarioService.findById(Integer.parseInt(session.getAttribute("idusuario").toString()))
+				.get();
 		model.addAttribute("cart", detalles); // inyectar en cart los detalles
 		model.addAttribute("orden", orden);
-		model.addAttribute("usuario",usuario);
-		
+		model.addAttribute("usuario", usuario);
 
 		return "/usuario/resumenorden";
 	}
-	
-	//Guardar la Orden
+
+	// Guardar la Orden
 	@GetMapping("/saveOrden")
 	public String saveOrden(HttpSession session) {
-		
-		if ( session.getAttribute("idusuario")==null) {
-			
+
+		if (session.getAttribute("idusuario") == null) {
+
 			return "/usuario/login";
 		}
 		if (detalles.isEmpty()) {
 			return "redirect:/";
 		}
-		Date fechaCreacion= new Date();
+		Date fechaCreacion = new Date();
 		orden.setFechaCreacion(fechaCreacion);
-		//orden.setFechaRecibida(fechaCreacion);
+		// orden.setFechaRecibida(fechaCreacion);
 		orden.setNumero(ordenService.generarNumeroOrden());
-		
-		//Usuario
-		Usuarios usuario=usuarioService.findById(Integer.parseInt( session.getAttribute("idusuario").toString())).get();
+
+		// Usuario
+		Usuarios usuario = usuarioService.findById(Integer.parseInt(session.getAttribute("idusuario").toString()))
+				.get();
 		orden.setUsuario(usuario);
 		ordenService.save(orden);
-		
-		//guardar detalles
-		for(DetalleOrden dt:detalles) {
+
+		// guardar detalles
+		for (DetalleOrden dt : detalles) {
 			dt.setOrden(orden);
 			detalleOrdenService.save(dt);
 		}
-		
+
 		/// limpiar Orden y detalles
-		orden=new Orden();
+		orden = new Orden();
 		detalles.clear();
-		
-		
+
 		return "redirect:/";
 	}
-	
-	//Busqueda
+
+	// Busqueda
 	@PostMapping("/search")
-	public String searchPorduct(@RequestParam("nombre") String nombre,Model model) {
-		LOGGER.info("Nombre del Producto: {}",nombre);
-		
-		List<Producto> productos=productoService.findAll().stream().filter(p -> p.getNombre().toLowerCase().contains(nombre.toLowerCase())).collect(Collectors.toList());
+	public String searchPorduct(@RequestParam("nombre") String nombre, Model model) {
+		LOGGER.info("Nombre del Producto: {}", nombre);
+
+		List<Producto> productos = productoService.findAll().stream()
+				.filter(p -> p.getNombre().toLowerCase().contains(nombre.toLowerCase())).collect(Collectors.toList());
 		model.addAttribute("productos", productos);
 		return "usuario/home";
 	}
+
+
+
 }
