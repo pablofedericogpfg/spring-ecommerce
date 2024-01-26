@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ public class UsuarioController {
 	@Autowired
 	private IOrdenService ordenService;
 
+	BCryptPasswordEncoder passEncode=new BCryptPasswordEncoder();
 	//usuario/registro
 	@GetMapping("/registro")
 	public String create() {
@@ -44,6 +46,7 @@ public class UsuarioController {
 		
 		LOGGER.info("Usuario a registrar {} ",usuario);
 		usuario.setTipo("USER");
+		usuario.setPassword(passEncode.encode(usuario.getPassword()));
 		usuarioService.save(usuario);
 		return "redirect:/";
 	}
@@ -55,10 +58,11 @@ public class UsuarioController {
 		return "/usuario/login";
 	}
 	
-	@PostMapping("/acceder")
+	@GetMapping("/acceder")
 	public String acceder(Usuarios usuario,HttpSession session) {
 		LOGGER.info("Acceso: {}",usuario);
-		Optional<Usuarios> user=usuarioService.findByMail(usuario.getMail());
+		//Optional<Usuarios> user=usuarioService.findByMail(usuario.getMail());
+		Optional<Usuarios> user=usuarioService.findById(Integer.parseInt( session.getAttribute("idusuario").toString()));
 		LOGGER.info("Usuario obtenido: {}",user);
 		if(user.isPresent()) {
 			session.setAttribute("idusuario", user.get().getId());
